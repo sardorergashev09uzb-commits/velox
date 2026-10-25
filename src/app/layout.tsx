@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Syne, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Outfit, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
-const syne = Syne({
+const outfit = Outfit({
   subsets: ["latin"],
-  weight: ["700", "800"],
+  weight: ["500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });
@@ -39,12 +39,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${jakarta.variable} ${jetbrainsMono.variable}`}
+      className={`${outfit.variable} ${jakarta.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="min-h-screen flex flex-col bg-[#08090B] text-[#F5F7FA] antialiased">
+      <body className="min-h-screen flex flex-col bg-[#090B0F] text-[#F3F5F8] antialiased">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-[#D4FF00] focus:text-[#08090B] focus:px-4 focus:py-2 focus:font-mono-tech focus:text-xs focus:font-bold"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-white focus:text-[#090B0F] focus:px-4 focus:py-2 focus:rounded-md focus:font-mono-tech focus:text-xs focus:font-bold"
         >
           Skip to main content
         </a>

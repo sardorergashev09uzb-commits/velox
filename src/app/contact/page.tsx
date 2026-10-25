@@ -15,17 +15,17 @@ export default async function ContactPage() {
   const vehicles = await getAllVehiclesFromDb();
 
   return (
-    <div className="bg-[#08090B] pt-28 pb-24 lg:pb-32 min-h-screen">
-      <div className="max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
-        <header className="border-b border-white/10 pb-10 space-y-4">
-          <span className="font-mono-tech text-xs uppercase tracking-[0.25em] text-[#D4FF00]">
-            PRIVATE CONCIERGE & TELEMETRY TRIALS
+    <div className="bg-[#090B0F] pt-28 pb-24 lg:pb-32 min-h-screen">
+      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
+        <header className="border-b border-white/[0.08] pb-10 space-y-4">
+          <span className="font-mono-tech text-xs uppercase tracking-[0.22em] text-[#D6C7B2]">
+            Private Concierge & Telemetry Trials
           </span>
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-            <h1 className="font-display text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-white">
-              BOOK A PRIVATE VIEWING
+            <h1 className="font-display text-4xl sm:text-6xl font-bold tracking-tight text-white">
+              Book a Private Viewing
             </h1>
-            <p className="text-sm sm:text-base text-[#9BA3B0] max-w-xl leading-relaxed">
+            <p className="text-sm sm:text-base text-[#949CA8] max-w-xl leading-relaxed">
               Select your preferred VELOX monocoque, programme type, and international sanctuary below.
             </p>
           </div>
@@ -33,8 +33,8 @@ export default async function ContactPage() {
 
         <Suspense
           fallback={
-            <div className="bg-[#0F1115] border border-white/10 p-12 font-mono-tech text-xs text-[#9BA3B0]">
-              LOADING TELEMETRY CONCIERGE FORM...
+            <div className="bg-[#11141B] rounded-xl border border-white/10 p-12 font-mono-tech text-xs text-[#949CA8]">
+              Loading concierge form...
             </div>
           }
         >

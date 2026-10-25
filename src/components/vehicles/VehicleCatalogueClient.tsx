@@ -94,25 +94,25 @@ export function VehicleCatalogueClient({
       {/* Interactive Filter Control Panel */}
       <section
         aria-label="Filter vehicles"
-        className="bg-[#0F1115] border border-white/10 p-6 sm:p-8 space-y-8"
+        className="bg-[#11141B] rounded-xl border border-white/[0.08] p-6 sm:p-8 space-y-7"
       >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-5">
           <div className="flex items-center gap-3">
-            <SlidersHorizontal className="w-4 h-4 text-[#D4FF00]" />
-            <h2 className="font-mono-tech text-xs uppercase tracking-[0.22em] text-white">
-              TELEMETRY & SPECIFICATION FILTERS
+            <SlidersHorizontal className="w-4 h-4 text-[#D6C7B2]" />
+            <h2 className="font-mono-tech text-xs uppercase tracking-[0.2em] text-white">
+              Specification Filters
             </h2>
           </div>
           <div className="flex items-center gap-4">
-            <span className="font-mono-tech text-xs text-[#9BA3B0]">
-              SHOWING <strong className="text-[#D4FF00]">{filteredVehicles.length}</strong> OF{" "}
-              {initialVehicles.length} MODELS
+            <span className="font-mono-tech text-xs text-[#949CA8]">
+              Showing <strong className="text-white">{filteredVehicles.length}</strong> of{" "}
+              {initialVehicles.length} Models
             </span>
             {hasActiveFilters && (
               <button
                 type="button"
                 onClick={resetFilters}
-                className="inline-flex items-center gap-1.5 font-mono-tech text-xs uppercase tracking-wider text-[#D4FF00] hover:underline"
+                className="inline-flex items-center gap-1.5 font-mono-tech text-xs uppercase tracking-wider text-[#D6C7B2] hover:text-white cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 Reset
@@ -123,8 +123,8 @@ export function VehicleCatalogueClient({
 
         {/* Body Type Pills */}
         <div className="space-y-3">
-          <label className="block font-mono-tech text-[11px] uppercase tracking-[0.2em] text-[#9BA3B0]">
-            01 // Chassis Architecture
+          <label className="block font-mono-tech text-[11px] uppercase tracking-[0.18em] text-[#949CA8]">
+            Chassis Architecture
           </label>
           <div className="flex flex-wrap gap-2">
             {BODY_TYPES.map((type) => {
@@ -134,10 +134,10 @@ export function VehicleCatalogueClient({
                   key={type}
                   type="button"
                   onClick={() => setSelectedBody(type)}
-                  className={`px-4 py-2.5 text-xs font-mono-tech uppercase tracking-wider border transition-colors ${
+                  className={`px-4 py-2 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                     active
-                      ? "bg-[#D4FF00] text-[#08090B] border-[#D4FF00] font-bold"
-                      : "bg-[#08090B] text-[#C8CDD5] border-white/15 hover:border-white/40"
+                      ? "bg-white text-[#090B0F] font-semibold"
+                      : "bg-[#090B0F] text-[#CBD5E1] border border-white/10 hover:border-white/30"
                   }`}
                 >
                   {type === "ALL" ? "All Chassis" : type}
@@ -149,13 +149,12 @@ export function VehicleCatalogueClient({
 
         {/* Secondary Controls Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
-          {/* Powertrain Select */}
           <div className="space-y-2">
             <label
               htmlFor="powertrain-filter"
-              className="block font-mono-tech text-[11px] uppercase tracking-[0.2em] text-[#9BA3B0]"
+              className="block font-mono-tech text-[11px] uppercase tracking-[0.18em] text-[#949CA8]"
             >
-              02 // Propulsion Unit
+              Propulsion Unit
             </label>
             <select
               id="powertrain-filter"
@@ -163,7 +162,7 @@ export function VehicleCatalogueClient({
               onChange={(e) =>
                 setSelectedPowertrain(e.target.value as "ALL" | PowertrainType)
               }
-              className="w-full bg-[#08090B] border border-white/15 px-3.5 py-2.5 text-xs font-mono-tech text-white focus:border-[#D4FF00]"
+              className="w-full bg-[#090B0F] rounded-md border border-white/15 px-3.5 py-2.5 text-xs text-white focus:border-white"
             >
               {POWERTRAINS.map((pt) => (
                 <option key={pt} value={pt}>
@@ -173,16 +172,15 @@ export function VehicleCatalogueClient({
             </select>
           </div>
 
-          {/* Max Price Range */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label
                 htmlFor="price-range"
-                className="font-mono-tech text-[11px] uppercase tracking-[0.2em] text-[#9BA3B0]"
+                className="font-mono-tech text-[11px] uppercase tracking-[0.18em] text-[#949CA8]"
               >
-                03 // Max Allocation
+                Max Allocation
               </label>
-              <span className="font-mono-tech text-xs text-[#D4FF00] font-semibold">
+              <span className="font-mono-tech text-xs text-white font-semibold">
                 {formatPrice(maxPrice)}
               </span>
             </div>
@@ -194,17 +192,16 @@ export function VehicleCatalogueClient({
               step={15000}
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
-              className="w-full accent-[#D4FF00] cursor-pointer mt-2"
+              className="w-full accent-white cursor-pointer mt-2"
             />
           </div>
 
-          {/* Sort Order */}
           <div className="space-y-2">
             <label
               htmlFor="sort-order"
-              className="block font-mono-tech text-[11px] uppercase tracking-[0.2em] text-[#9BA3B0]"
+              className="block font-mono-tech text-[11px] uppercase tracking-[0.18em] text-[#949CA8]"
             >
-              04 // Sort Sequence
+              Sort Sequence
             </label>
             <select
               id="sort-order"
@@ -218,7 +215,7 @@ export function VehicleCatalogueClient({
                     | "hp-desc"
                 )
               }
-              className="w-full bg-[#08090B] border border-white/15 px-3.5 py-2.5 text-xs font-mono-tech text-white focus:border-[#D4FF00]"
+              className="w-full bg-[#090B0F] rounded-md border border-white/15 px-3.5 py-2.5 text-xs text-white focus:border-white"
             >
               <option value="featured">Showroom Curated</option>
               <option value="hp-desc">Output: Highest PS First</option>
@@ -227,13 +224,12 @@ export function VehicleCatalogueClient({
             </select>
           </div>
 
-          {/* Search Model */}
           <div className="space-y-2">
             <label
               htmlFor="model-search"
-              className="block font-mono-tech text-[11px] uppercase tracking-[0.2em] text-[#9BA3B0]"
+              className="block font-mono-tech text-[11px] uppercase tracking-[0.18em] text-[#949CA8]"
             >
-              05 // Direct Search
+              Direct Search
             </label>
             <div className="relative">
               <Search className="w-3.5 h-3.5 text-[#5E6673] absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -243,7 +239,7 @@ export function VehicleCatalogueClient({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Valkyrie, V10, Electric..."
-                className="w-full bg-[#08090B] border border-white/15 pl-9 pr-3.5 py-2.5 text-xs font-mono-tech text-white placeholder:text-[#5E6673] focus:border-[#D4FF00]"
+                className="w-full bg-[#090B0F] rounded-md border border-white/15 pl-9 pr-3.5 py-2.5 text-xs text-white placeholder:text-[#5E6673] focus:border-white"
               />
             </div>
           </div>
@@ -258,20 +254,20 @@ export function VehicleCatalogueClient({
           ))}
         </div>
       ) : (
-        <div className="bg-[#0F1115] border border-white/10 p-16 text-center space-y-5">
-          <p className="font-mono-tech text-xs uppercase tracking-[0.25em] text-[#D4FF00]">
-            ZERO SPECIFICATIONS MATCHED
+        <div className="bg-[#11141B] rounded-xl border border-white/10 p-16 text-center space-y-5">
+          <p className="font-mono-tech text-xs uppercase tracking-[0.2em] text-[#D6C7B2]">
+            Zero Specifications Matched
           </p>
-          <h3 className="font-display text-2xl font-bold text-white uppercase">
+          <h3 className="font-display text-2xl font-bold text-white">
             No VELOX models match your active filter parameters.
           </h3>
-          <p className="text-sm text-[#9BA3B0] max-w-md mx-auto">
+          <p className="text-sm text-[#949CA8] max-w-md mx-auto">
             Adjust the maximum allocation slider or reset your powertrain filters to view all available showroom configurations.
           </p>
           <button
             type="button"
             onClick={resetFilters}
-            className="inline-flex items-center gap-2 bg-[#D4FF00] text-[#08090B] px-6 py-3 text-xs font-bold uppercase tracking-[0.2em]"
+            className="inline-flex items-center gap-2 bg-white text-[#090B0F] px-6 py-3 rounded-md text-xs font-semibold uppercase tracking-[0.16em]"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset All Filters</span>
