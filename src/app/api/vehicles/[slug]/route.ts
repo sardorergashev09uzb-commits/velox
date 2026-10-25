@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getVehicleBySlugFromDb } from "@/lib/vehicles-db";
+import { getVehicleBySlugFromDb, ensureDatabaseSeeded } from "@/lib/vehicles-db";
 
 interface RouteContext {
   params: Promise<{ slug: string }>;
@@ -20,6 +20,7 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
+    await ensureDatabaseSeeded();
     const { slug } = await context.params;
     const body = await request.json();
 
@@ -35,47 +36,196 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     }
 
     const currentPerf = JSON.parse(existing.performanceJson);
+    const incomingPerf = body.performance || {};
     const updatedPerf = {
-      ...currentPerf,
       horsepower:
-        body.horsepower !== undefined
+        incomingPerf.horsepower !== undefined
+          ? Number(incomingPerf.horsepower)
+          : body.horsepower !== undefined
           ? Number(body.horsepower)
           : currentPerf.horsepower,
       torqueNm:
-        body.torqueNm !== undefined
+        incomingPerf.torqueNm !== undefined
+          ? Number(incomingPerf.torqueNm)
+          : body.torqueNm !== undefined
           ? Number(body.torqueNm)
           : currentPerf.torqueNm,
       zeroToHundred:
-        body.zeroToHundred !== undefined
+        incomingPerf.zeroToHundred !== undefined
+          ? String(incomingPerf.zeroToHundred)
+          : body.zeroToHundred !== undefined
           ? String(body.zeroToHundred)
           : currentPerf.zeroToHundred,
+      zeroToTwoHundred:
+        incomingPerf.zeroToTwoHundred !== undefined
+          ? String(incomingPerf.zeroToTwoHundred)
+          : currentPerf.zeroToTwoHundred || "5.8 s",
       topSpeedKmh:
-        body.topSpeedKmh !== undefined
+        incomingPerf.topSpeedKmh !== undefined
+          ? Number(incomingPerf.topSpeedKmh)
+          : body.topSpeedKmh !== undefined
           ? Number(body.topSpeedKmh)
           : currentPerf.topSpeedKmh,
       weightKg:
-        body.weightKg !== undefined
+        incomingPerf.weightKg !== undefined
+          ? Number(incomingPerf.weightKg)
+          : body.weightKg !== undefined
           ? Number(body.weightKg)
           : currentPerf.weightKg,
+      downforceKg:
+        incomingPerf.downforceKg !== undefined
+          ? Number(incomingPerf.downforceKg)
+          : currentPerf.downforceKg || 450,
+      redlineRpm:
+        incomingPerf.redlineRpm !== undefined
+          ? incomingPerf.redlineRpm
+          : currentPerf.redlineRpm,
+      rangeKm:
+        incomingPerf.rangeKm !== undefined
+          ? incomingPerf.rangeKm
+            ? Number(incomingPerf.rangeKm)
+            : undefined
+          : currentPerf.rangeKm,
     };
+
+    const currentDim = JSON.parse(existing.dimensionsJson);
+    const incomingDim = body.dimensions || {};
+    const updatedDim = {
+      lengthMm:
+        incomingDim.lengthMm !== undefined
+          ? Number(incomingDim.lengthMm)
+          : currentDim.lengthMm,
+      widthMm:
+        incomingDim.widthMm !== undefined
+          ? Number(incomingDim.widthMm)
+          : currentDim.widthMm,
+      heightMm:
+        incomingDim.heightMm !== undefined
+          ? Number(incomingDim.heightMm)
+          : currentDim.heightMm,
+      wheelbaseMm:
+        incomingDim.wheelbaseMm !== undefined
+          ? Number(incomingDim.wheelbaseMm)
+          : currentDim.wheelbaseMm,
+      weightDistribution:
+        incomingDim.weightDistribution !== undefined
+          ? String(incomingDim.weightDistribution)
+          : currentDim.weightDistribution,
+    };
+
+    const currentChassis = JSON.parse(existing.chassisAndAeroJson);
+    const incomingChassis = body.chassisAndAero || {};
+    const updatedChassis = {
+      monocoque:
+        incomingChassis.monocoque !== undefined
+          ? String(incomingChassis.monocoque)
+          : currentChassis.monocoque,
+      suspension:
+        incomingChassis.suspension !== undefined
+          ? String(incomingChassis.suspension)
+          : currentChassis.suspension,
+      brakes:
+        incomingChassis.brakes !== undefined
+          ? String(incomingChassis.brakes)
+          : currentChassis.brakes,
+      aerodynamics:
+        incomingChassis.aerodynamics !== undefined
+          ? String(incomingChassis.aerodynamics)
+          : currentChassis.aerodynamics,
+      tires:
+        incomingChassis.tires !== undefined
+          ? String(incomingChassis.tires)
+          : currentChassis.tires,
+    };
+
+    const currentHighlights = JSON.parse(existing.highlightsJson);
+    const updatedHighlights = Array.isArray(body.highlights)
+      ? body.highlights
+      : currentHighlights;
+
+    const currentGallery = JSON.parse(existing.galleryJson);
+    const updatedGallery = Array.isArray(body.images?.gallery)
+      ? body.images.gallery
+      : Array.isArray(body.gallery)
+      ? body.gallery
+      : currentGallery;
+
+    const heroImage =
+      body.images?.hero ?? body.heroImage ?? existing.heroImage;
+    const cardImage =
+      body.images?.card ?? body.cardImage ?? heroImage ?? existing.cardImage;
+    const editorialImage =
+      body.images?.editorial ??
+      body.editorialImage ??
+      existing.editorialImage;
 
     const updated = await prisma.vehicleRecord.update({
       where: { slug },
       data: {
-        name: body.name !== undefined ? String(body.name).toUpperCase() : existing.name,
-        tagline: body.tagline !== undefined ? String(body.tagline) : existing.tagline,
-        price: body.price !== undefined ? Number(body.price) : existing.price,
+        name:
+          body.name !== undefined
+            ? String(body.name).toUpperCase()
+            : existing.name,
+        codeName:
+          body.codeName !== undefined ? String(body.codeName) : existing.codeName,
+        series:
+          body.series !== undefined ? String(body.series) : existing.series,
+        tagline:
+          body.tagline !== undefined ? String(body.tagline) : existing.tagline,
         year: body.year !== undefined ? Number(body.year) : existing.year,
-        bodyType: body.bodyType !== undefined ? String(body.bodyType) : existing.bodyType,
+        price: body.price !== undefined ? Number(body.price) : existing.price,
+        bodyType:
+          body.bodyType !== undefined ? String(body.bodyType) : existing.bodyType,
         powertrain:
-          body.powertrain !== undefined ? String(body.powertrain) : existing.powertrain,
+          body.powertrain !== undefined
+            ? String(body.powertrain)
+            : existing.powertrain,
+        transmission:
+          body.transmission !== undefined
+            ? String(body.transmission)
+            : existing.transmission,
+        drivetrain:
+          body.drivetrain !== undefined
+            ? String(body.drivetrain)
+            : existing.drivetrain,
+        fuelType:
+          body.fuelType !== undefined ? String(body.fuelType) : existing.fuelType,
         featured:
-          body.featured !== undefined ? Boolean(body.featured) : existing.featured,
-        heroImage:
-          body.heroImage !== undefined ? String(body.heroImage) : existing.heroImage,
-        cardImage:
-          body.heroImage !== undefined ? String(body.heroImage) : existing.cardImage,
+          body.featured !== undefined
+            ? Boolean(body.featured)
+            : existing.featured,
+        productionLimit:
+          body.productionLimit !== undefined
+            ? body.productionLimit
+              ? String(body.productionLimit)
+              : null
+            : existing.productionLimit,
+        editorialQuote:
+          body.editorialQuote !== undefined
+            ? String(body.editorialQuote)
+            : existing.editorialQuote,
+        overview:
+          body.overview !== undefined ? String(body.overview) : existing.overview,
+        engineeringStory:
+          body.engineeringStory !== undefined
+            ? String(body.engineeringStory)
+            : existing.engineeringStory,
+        exteriorFinish:
+          body.exteriorFinish !== undefined
+            ? String(body.exteriorFinish)
+            : existing.exteriorFinish,
+        interiorTrim:
+          body.interiorTrim !== undefined
+            ? String(body.interiorTrim)
+            : existing.interiorTrim,
+        heroImage,
+        cardImage,
+        editorialImage,
         performanceJson: JSON.stringify(updatedPerf),
+        dimensionsJson: JSON.stringify(updatedDim),
+        chassisAndAeroJson: JSON.stringify(updatedChassis),
+        highlightsJson: JSON.stringify(updatedHighlights),
+        galleryJson: JSON.stringify(updatedGallery),
       },
     });
 
@@ -89,6 +239,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
 export async function DELETE(_request: NextRequest, context: RouteContext) {
   try {
+    await ensureDatabaseSeeded();
     const { slug } = await context.params;
     await prisma.vehicleRecord.delete({
       where: { slug },
