@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model VehicleRecord {
+  id                 String   @id @default(cuid())
+  slug               String   @unique
+  name               String
+  codeName           String
+  series             String
+  tagline            String
+  year               Int
+  price              Int
+  bodyType           String
+  powertrain         String
+  transmission       String
+  drivetrain         String
+  fuelType           String
+  featured           Boolean  @default(false)
+  productionLimit    String?
+  editorialQuote     String
+  overview           String
+  engineeringStory   String
+  exteriorFinish     String
+  interiorTrim       String
+  heroImage          String
+  cardImage          String
+  editorialImage     String
+  performanceJson    String
+  dimensionsJson     String
+  chassisAndAeroJson String
+  highlightsJson     String
+  galleryJson        String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Inquiry {
+  id              String   @id @default(cuid())
+  referenceCode   String   @unique
+  fullName        String
+  email           String
+  phone           String
+  vehicleSlug     String
+  vehicleName     String
+  experienceType  String   // "PRIVATE_VIEWING" | "TRACK_TEST_DRIVE" | "BESPOKE_COMMISSION"
+  preferredDate   String
+  location        String
+  notes           String?
+  status          String   @default("PENDING") // "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED"
+  createdAt       DateTime @default(now())
+}
